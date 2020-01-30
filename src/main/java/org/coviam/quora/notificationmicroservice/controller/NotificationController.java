@@ -68,6 +68,30 @@ public class NotificationController {
     @PostMapping("/comment")
     public ResponseEntity<HttpStatus> newComment(@RequestBody CommentDTO commentDTO){
 
+        String parentId = commentDTO.getParentId();
+        String userId;
+        String type;
+        if(commentDTO.getParentId().startsWith("C_")){
+            final String uri="";
+            restTemplate=new RestTemplate();
+            ResponseDTO<String> responseDTO=restTemplate.getForObject(uri,ResponseDTO.class,parentId);
+            userId=responseDTO.getData();
+            type="comment";
+        }
+        else if (commentDTO.getParentId().startsWith("Q_")){
+            final String uri="";
+            restTemplate=new RestTemplate();
+            userId = restTemplate.getForObject(uri,String.class,parentId);
+            type="question";
+        }
+        else {
+            final String uri="";
+            restTemplate=new RestTemplate();
+            userId = restTemplate.getForObject(uri,String.class,parentId);
+            type="answer";
+        }
+
+        notificationService.newComment(commentDTO,userId,type);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -98,6 +122,13 @@ public class NotificationController {
         if (followDTO.getIsApproved()){
             notificationService.followRequestAccepted(followDTO);
         }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/threadClosed")
+    public ResponseEntity<HttpStatus> threadClosed(@RequestBody AnswerDTO answerDTO){
+
+        notificationService.threadClosed(answerDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

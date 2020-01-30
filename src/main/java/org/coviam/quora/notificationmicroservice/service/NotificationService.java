@@ -14,4 +14,6 @@ public interface NotificationService {
     void levelUp(LevelUpDTO levelUpDTO);
     void followRequested(FollowDTO followDTO);
     void followRequestAccepted(FollowDTO followDTO);
+    void threadClosed(AnswerDTO answerDTO);
+    void newComment(CommentDTO commentDTO, String id, String type);
 }
