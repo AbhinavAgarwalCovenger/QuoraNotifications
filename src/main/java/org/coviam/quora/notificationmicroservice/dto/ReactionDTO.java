@@ -10,7 +10,7 @@ import lombok.ToString;
 public class ReactionDTO {
 
     String reactedUserName;
-    String type;
+    String reactionType;
     String onWhomReactedId;
-
+    String postType;
 }

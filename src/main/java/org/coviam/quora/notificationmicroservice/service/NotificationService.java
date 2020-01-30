@@ -4,11 +4,14 @@ import org.coviam.quora.notificationmicroservice.dto.*;
 
 public interface NotificationService {
 
-    void newQues(AskerResponseDTO askerResponseDTO);
-    void newAns(AnswerResponseDTO answerResponseDTO);
-    void questionApproved(AskerResponseDTO askerResponseDTO);
-    void questionRejected(String name);
-    void answerApproved(AnswerResponseDTO answerResponseDTO);
-    void answerRejected(String name);
-    void newreaction(ReactionDTO reactionDTO);
+    void newQues(AskerResponseDTO askerResponseDTO, QuestionDTO questionDTO);
+    void newAns(AnswerResponseDTO answerResponseDTO, AnswerDTO answerDTO);
+    void questionApproved(AskerResponseDTO askerResponseDTO, QuestionDTO questionDTO);
+    void questionRejected(QuestionDTO questionDTO);
+    void answerApproved(AnswerResponseDTO answerResponseDTO, AnswerDTO answerDTO);
+    void answerRejected(AnswerDTO answerDTO);
+    void newReaction(ReactionDTO reactionDTO);
+    void levelUp(LevelUpDTO levelUpDTO);
+    void followRequested(FollowDTO followDTO);
+    void followRequestAccepted(FollowDTO followDTO);
 }

@@ -22,7 +22,7 @@ public class NotificationController {
         final String uri="";
         restTemplate=new RestTemplate();
         AskerResponseDTO askerResponseDTO=restTemplate.getForObject(uri,AskerResponseDTO.class,questionDTO);
-        notificationService.newQues(askerResponseDTO);
+        notificationService.newQues(askerResponseDTO, questionDTO);
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
@@ -33,10 +33,10 @@ public class NotificationController {
             final String uri = "";
             restTemplate = new RestTemplate();
             AskerResponseDTO askerResponseDTO = restTemplate.getForObject(uri, AskerResponseDTO.class, questionDTO);
-            notificationService.questionApproved(askerResponseDTO);
+            notificationService.questionApproved(askerResponseDTO,questionDTO);
         }
         else {
-            notificationService.questionRejected(questionDTO.getTaggedProfileName());
+            notificationService.questionRejected(questionDTO);
         }
         return  new ResponseEntity<>(HttpStatus.OK);
     }
@@ -47,7 +47,7 @@ public class NotificationController {
         final String uri = "";
         restTemplate = new RestTemplate();
         AnswerResponseDTO answerResponseDTO = restTemplate.getForObject(uri,AnswerResponseDTO.class,answerDTO);
-        notificationService.newAns(answerResponseDTO);
+        notificationService.newAns(answerResponseDTO, answerDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -57,10 +57,10 @@ public class NotificationController {
             final String uri = "";
             restTemplate = new RestTemplate();
             AnswerResponseDTO answerResponseDTO = restTemplate.getForObject(uri, AnswerResponseDTO.class, answerDTO);
-            notificationService.answerApproved(answerResponseDTO);
+            notificationService.answerApproved(answerResponseDTO, answerDTO);
         }
         else {
-            notificationService.answerRejected(answerDTO.getTaggedProfileName());
+            notificationService.answerRejected(answerDTO);
         }
         return  new ResponseEntity<>(HttpStatus.OK);
     }
@@ -74,9 +74,30 @@ public class NotificationController {
     @GetMapping("/reaction")
     public ResponseEntity<HttpStatus> getReaction(@RequestBody ReactionDTO reactionDTO){
 
-        notificationService.newreaction(reactionDTO);
+        notificationService.newReaction(reactionDTO);
         return  new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/levelUp")
+    public ResponseEntity<HttpStatus> leveledUp(@RequestBody LevelUpDTO levelUpDTO){
 
+        notificationService.levelUp(levelUpDTO);
+        return  new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/followRequest")
+    public ResponseEntity<HttpStatus> followRequest(@RequestBody FollowDTO followDTO){
+
+        notificationService.followRequested(followDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/followApproval")
+    public ResponseEntity<HttpStatus> followApproval(@RequestBody FollowDTO followDTO){
+
+        if (followDTO.getIsApproved()){
+            notificationService.followRequestAccepted(followDTO);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

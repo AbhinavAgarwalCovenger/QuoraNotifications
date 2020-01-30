@@ -11,7 +11,7 @@ import java.util.List;
 @ToString
 public class LevelUpDTO {
 
-    private String userDeviceId;
+    private String userId;
     private List<String> followerUserId;
     private String level;
     private String userName;
