@@ -9,7 +9,6 @@ import java.util.List;
 @Setter
 public class NotificationDTO {
 
-    String title;
     String message;
     List<String> userId;
 }

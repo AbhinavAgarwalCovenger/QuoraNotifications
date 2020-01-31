@@ -1,7 +1,11 @@
 package org.coviam.quora.notificationmicroservice.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.coviam.quora.notificationmicroservice.dto.*;
 import org.coviam.quora.notificationmicroservice.service.NotificationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,9 +14,14 @@ import java.util.List;
 @Service
 public class NotificationServiceImpl implements NotificationService {
 
+    @Autowired
+    KafkaTemplate<String,String > kafkaTemplate;
+
+    final String TOPIC = "notify";
+
     @Override
-    public void newQues(AskerResponseDTO askerResponseDTO, QuestionDTO questionDTO) {
-        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
+    public void newQues(AskerResponseDTO askerResponseDTO, QuestionDTO questionDTO) throws JsonProcessingException {
+//        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
         List<NotificationDTO> list = new ArrayList<>();
 
         String name = questionDTO.getAskerUserName();
@@ -35,7 +44,7 @@ public class NotificationServiceImpl implements NotificationService {
             notificationDTO.setUserId(userId);
 
             list.add(notificationDTO);
-            finalNotifyDTO.setNotificationDTOList(list);
+//            finalNotifyDTO.setNotificationDTOList(list);
         }
         else {
 
@@ -63,19 +72,26 @@ public class NotificationServiceImpl implements NotificationService {
             list.add(followerNotificationDTO);
             list.add(categoryNotificationDTO);
 
-            finalNotifyDTO.setNotificationDTOList(list);
+//            finalNotifyDTO.setNotificationDTOList(list);
         }
 
-        finalNotifyDTO.setChannel("quora");
-        finalNotifyDTO.setCategory(category);
-        finalNotifyDTO.setUserId(questionDTO.getAskerId());
-        finalNotifyDTO.setAction("askedQuestion");
+        for(NotificationDTO notifyList: list){
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            kafkaTemplate.send(TOPIC,objectMapper.writeValueAsString(notifyList));
+        }
+
+//        finalNotifyDTO.setNotificationDTOList(list);
+//        finalNotifyDTO.setChannel("quora");
+//        finalNotifyDTO.setCategory(category);
+//        finalNotifyDTO.setUserId(questionDTO.getAskerId());
+//        finalNotifyDTO.setAction("askedQuestion");
     }
 
     @Override
-    public void newAns(AnswerResponseDTO answerResponseDTO, AnswerDTO answerDTO) {
+    public void newAns(AnswerResponseDTO answerResponseDTO, AnswerDTO answerDTO) throws JsonProcessingException {
 
-        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
+//        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
         List<NotificationDTO> list = new ArrayList<>();
 
         String askerName = answerDTO.getQuestionAskerName();
@@ -101,7 +117,7 @@ public class NotificationServiceImpl implements NotificationService {
             notificationDTO.setUserId(userId);
 
             list.add(notificationDTO);
-            finalNotifyDTO.setNotificationDTOList(list);
+//            finalNotifyDTO.setNotificationDTOList(list);
         }
         else {
 
@@ -137,18 +153,26 @@ public class NotificationServiceImpl implements NotificationService {
             list.add(askerFollowerNotificationDTO);
             list.add(categoryNotificationDTO);
 
-            finalNotifyDTO.setNotificationDTOList(list);
+//            finalNotifyDTO.setNotificationDTOList(list);
         }
-        finalNotifyDTO.setChannel("quora");
-        finalNotifyDTO.setCategory(category);
-        finalNotifyDTO.setUserId(answerDTO.getAnswerUserId());
-        finalNotifyDTO.setAction("answeredQuestion");
+
+        for(NotificationDTO notifyList: list){
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            kafkaTemplate.send(TOPIC,objectMapper.writeValueAsString(notifyList));
+        }
+
+//        finalNotifyDTO.setNotificationDTOList(list);
+//        finalNotifyDTO.setChannel("quora");
+//        finalNotifyDTO.setCategory(category);
+//        finalNotifyDTO.setUserId(answerDTO.getAnswerUserId());
+//        finalNotifyDTO.setAction("answeredQuestion");
     }
 
     @Override
-    public void questionApproved(AskerResponseDTO askerResponseDTO, QuestionDTO questionDTO) {
+    public void questionApproved(AskerResponseDTO askerResponseDTO, QuestionDTO questionDTO) throws JsonProcessingException {
 
-        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
+//        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
         List<NotificationDTO> list = new ArrayList<>();
 
         String askerName = questionDTO.getAskerUserName();
@@ -186,17 +210,23 @@ public class NotificationServiceImpl implements NotificationService {
         list.add(categoryFollowerNotification);
         list.add(taggedFollowerNotification);
 
-        finalNotifyDTO.setNotificationDTOList(list);
-        finalNotifyDTO.setChannel("quora");
-        finalNotifyDTO.setCategory(category);
-        finalNotifyDTO.setUserId(questionDTO.getTaggedProfileId());
-        finalNotifyDTO.setAction("approvedQuestion");
+        for(NotificationDTO notifyList: list){
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            kafkaTemplate.send(TOPIC,objectMapper.writeValueAsString(notifyList));
+        }
+
+//        finalNotifyDTO.setNotificationDTOList(list);
+//        finalNotifyDTO.setChannel("quora");
+//        finalNotifyDTO.setCategory(category);
+//        finalNotifyDTO.setUserId(questionDTO.getTaggedProfileId());
+//        finalNotifyDTO.setAction("approvedQuestion");
 
     }
 
     @Override
-    public void questionRejected(QuestionDTO questionDTO) {
-        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
+    public void questionRejected(QuestionDTO questionDTO) throws JsonProcessingException {
+//        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
         List<NotificationDTO> list = new ArrayList<>();
 
         String name = questionDTO.getTaggedProfileName();
@@ -210,16 +240,23 @@ public class NotificationServiceImpl implements NotificationService {
 
         list.add(notificationDTO);
 
-        finalNotifyDTO.setChannel("quora");
-        finalNotifyDTO.setCategory(questionDTO.getCategory());
-        finalNotifyDTO.setUserId(questionDTO.getTaggedProfileId());
-        finalNotifyDTO.setAction("rejectedQuestion");
+        for(NotificationDTO notifyList: list){
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            kafkaTemplate.send(TOPIC,objectMapper.writeValueAsString(notifyList));
+        }
+
+//        finalNotifyDTO.setNotificationDTOList(list);
+//        finalNotifyDTO.setChannel("quora");
+//        finalNotifyDTO.setCategory(questionDTO.getCategory());
+//        finalNotifyDTO.setUserId(questionDTO.getTaggedProfileId());
+//        finalNotifyDTO.setAction("rejectedQuestion");
 
     }
 
     @Override
-    public void answerApproved(AnswerResponseDTO answerResponseDTO, AnswerDTO answerDTO) {
-        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
+    public void answerApproved(AnswerResponseDTO answerResponseDTO, AnswerDTO answerDTO) throws JsonProcessingException {
+//        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
         List<NotificationDTO> list = new ArrayList<>();
 
         String askerName = answerDTO.getQuestionAskerName();
@@ -270,17 +307,23 @@ public class NotificationServiceImpl implements NotificationService {
         list.add(categoryFollowerNotification);
         list.add(taggedProfileFollowersNotification);
 
-        finalNotifyDTO.setNotificationDTOList(list);
-        finalNotifyDTO.setChannel("quora");
-        finalNotifyDTO.setCategory(category);
-        finalNotifyDTO.setUserId(answerDTO.getTaggedProfileId());
-        finalNotifyDTO.setAction("approvedAnswer");
+        for(NotificationDTO notifyList: list){
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            kafkaTemplate.send(TOPIC,objectMapper.writeValueAsString(notifyList));
+        }
+
+//        finalNotifyDTO.setNotificationDTOList(list);
+//        finalNotifyDTO.setChannel("quora");
+//        finalNotifyDTO.setCategory(category);
+//        finalNotifyDTO.setUserId(answerDTO.getTaggedProfileId());
+//        finalNotifyDTO.setAction("approvedAnswer");
 
     }
 
     @Override
-    public void answerRejected(AnswerDTO answerDTO) {
-        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
+    public void answerRejected(AnswerDTO answerDTO) throws JsonProcessingException {
+//        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
         List<NotificationDTO> list = new ArrayList<>();
 
         String name = answerDTO.getTaggedProfileName();
@@ -292,16 +335,24 @@ public class NotificationServiceImpl implements NotificationService {
         notificationDTO.setUserId(userId);
         notificationDTO.setMessage(name+" has rejected your answer");
 
-        finalNotifyDTO.setNotificationDTOList(list);
-        finalNotifyDTO.setChannel("quora");
-        finalNotifyDTO.setCategory(answerDTO.getCategory());
-        finalNotifyDTO.setUserId(answerDTO.getTaggedProfileId());
-        finalNotifyDTO.setAction("rejectedAnswer");
+        list.add(notificationDTO);
+
+        for(NotificationDTO notifyList: list){
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            kafkaTemplate.send(TOPIC,objectMapper.writeValueAsString(notifyList));
+        }
+
+//        finalNotifyDTO.setNotificationDTOList(list);
+//        finalNotifyDTO.setChannel("quora");
+//        finalNotifyDTO.setCategory(answerDTO.getCategory());
+//        finalNotifyDTO.setUserId(answerDTO.getTaggedProfileId());
+//        finalNotifyDTO.setAction("rejectedAnswer");
     }
 
     @Override
-    public void newReaction(ReactionDTO reactionDTO) {
-        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
+    public void newReaction(ReactionDTO reactionDTO) throws JsonProcessingException {
+//        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
         List<NotificationDTO> list = new ArrayList<>();
 
         NotificationDTO notificationDTO = new NotificationDTO();
@@ -324,16 +375,22 @@ public class NotificationServiceImpl implements NotificationService {
 
         list.add(notificationDTO);
 
-        finalNotifyDTO.setNotificationDTOList(list);
-        finalNotifyDTO.setChannel("quora");
-        finalNotifyDTO.setCategory(reactionDTO.getCategory());
-        finalNotifyDTO.setUserId(reactionDTO.getReactedUserId());
-        finalNotifyDTO.setAction("newReaction");
+        for(NotificationDTO notifyList: list){
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            kafkaTemplate.send(TOPIC,objectMapper.writeValueAsString(notifyList));
+        }
+
+//        finalNotifyDTO.setNotificationDTOList(list);
+//        finalNotifyDTO.setChannel("quora");
+//        finalNotifyDTO.setCategory(reactionDTO.getCategory());
+//        finalNotifyDTO.setUserId(reactionDTO.getReactedUserId());
+//        finalNotifyDTO.setAction("newReaction");
     }
 
     @Override
-    public void levelUp(LevelUpDTO levelUpDTO) {
-        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
+    public void levelUp(LevelUpDTO levelUpDTO) throws JsonProcessingException {
+//        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
         List<NotificationDTO> list = new ArrayList<>();
 
         String name = levelUpDTO.getUserName();
@@ -360,17 +417,23 @@ public class NotificationServiceImpl implements NotificationService {
         list.add(selfNotificationDTO);
         list.add(followerNotificationDTO);
 
-        finalNotifyDTO.setNotificationDTOList(list);
-        finalNotifyDTO.setChannel("quora");
+        for(NotificationDTO notifyList: list){
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            kafkaTemplate.send(TOPIC,objectMapper.writeValueAsString(notifyList));
+        }
+
+//        finalNotifyDTO.setNotificationDTOList(list);
+//        finalNotifyDTO.setChannel("quora");
 //        finalNotifyDTO.setCategory();
-        finalNotifyDTO.setUserId(levelUpDTO.getUserId());
-        finalNotifyDTO.setAction("levelledUp");
+//        finalNotifyDTO.setUserId(levelUpDTO.getUserId());
+//        finalNotifyDTO.setAction("levelledUp");
 
     }
 
     @Override
-    public void followRequested(FollowDTO followDTO) {
-        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
+    public void followRequested(FollowDTO followDTO) throws JsonProcessingException {
+//        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
         List<NotificationDTO> list = new ArrayList<>();
 
         String name = followDTO.getFollowerName();
@@ -394,17 +457,24 @@ public class NotificationServiceImpl implements NotificationService {
         }
 
         list.add(notificationDTO);
-        finalNotifyDTO.setNotificationDTOList(list);
-        finalNotifyDTO.setChannel("quora");
+
+        for(NotificationDTO notifyList: list){
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            kafkaTemplate.send(TOPIC,objectMapper.writeValueAsString(notifyList));
+        }
+
+//        finalNotifyDTO.setNotificationDTOList(list);
+//        finalNotifyDTO.setChannel("quora");
 //        finalNotifyDTO.setCategory();
-        finalNotifyDTO.setUserId(followDTO.getFollowerUserId());
-        finalNotifyDTO.setAction("followRequested");
+//        finalNotifyDTO.setUserId(followDTO.getFollowerUserId());
+//        finalNotifyDTO.setAction("followRequested");
 
     }
 
     @Override
-    public void followRequestAccepted(FollowDTO followDTO) {
-        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
+    public void followRequestAccepted(FollowDTO followDTO) throws JsonProcessingException {
+//        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
         List<NotificationDTO> list = new ArrayList<>();
 
         String name = followDTO.getFollowedName();
@@ -417,17 +487,24 @@ public class NotificationServiceImpl implements NotificationService {
         notificationDTO.setMessage(name+" accepted your follow request");
 
         list.add(notificationDTO);
-        finalNotifyDTO.setNotificationDTOList(list);
-        finalNotifyDTO.setChannel("quora");
+
+        for(NotificationDTO notifyList: list){
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            kafkaTemplate.send(TOPIC,objectMapper.writeValueAsString(notifyList));
+        }
+
+//        finalNotifyDTO.setNotificationDTOList(list);
+//        finalNotifyDTO.setChannel("quora");
 //        finalNotifyDTO.setCategory();
-        finalNotifyDTO.setUserId(followDTO.getFollowedUserId());
-        finalNotifyDTO.setAction("followRequestAccepted");
+//        finalNotifyDTO.setUserId(followDTO.getFollowedUserId());
+//        finalNotifyDTO.setAction("followRequestAccepted");
 
     }
 
     @Override
-    public void threadClosed(AnswerDTO answerDTO) {
-        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
+    public void threadClosed(AnswerDTO answerDTO) throws JsonProcessingException {
+//        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
         List<NotificationDTO> list = new ArrayList<>();
 
         String name = answerDTO.getQuestionAskerName();
@@ -441,18 +518,25 @@ public class NotificationServiceImpl implements NotificationService {
         notificationDTO.setMessage(name+" chose your answer as the correct answer");
 
         list.add(notificationDTO);
-        finalNotifyDTO.setNotificationDTOList(list);
-        finalNotifyDTO.setChannel("quora");
-        finalNotifyDTO.setCategory(answerDTO.getCategory());
-        finalNotifyDTO.setUserId(answerDTO.getQuestionAskerId());
-        finalNotifyDTO.setAction("threadClosed");
+
+        for(NotificationDTO notifyList: list){
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            kafkaTemplate.send(TOPIC,objectMapper.writeValueAsString(notifyList));
+        }
+
+//        finalNotifyDTO.setNotificationDTOList(list);
+//        finalNotifyDTO.setChannel("quora");
+//        finalNotifyDTO.setCategory(answerDTO.getCategory());
+//        finalNotifyDTO.setUserId(answerDTO.getQuestionAskerId());
+//        finalNotifyDTO.setAction("threadClosed");
 
     }
 
     @Override
-    public void newComment(CommentDTO commentDTO, String id, String type) {
+    public void newComment(CommentDTO commentDTO, String id, String type) throws JsonProcessingException {
 
-        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
+//        FinalNotifyDTO finalNotifyDTO = new FinalNotifyDTO();
         List<NotificationDTO> list = new ArrayList<>();
 
         NotificationDTO notificationDTO = new NotificationDTO();
@@ -463,10 +547,17 @@ public class NotificationServiceImpl implements NotificationService {
         notificationDTO.setMessage("Someone commented on your "+type);
 
         list.add(notificationDTO);
-        finalNotifyDTO.setNotificationDTOList(list);
-        finalNotifyDTO.setChannel("quora");
+
+        for(NotificationDTO notifyList: list){
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            kafkaTemplate.send(TOPIC,objectMapper.writeValueAsString(notifyList));
+        }
+
+//        finalNotifyDTO.setNotificationDTOList(list);
+//        finalNotifyDTO.setChannel("quora");
 //        finalNotifyDTO.setCategory();
-        finalNotifyDTO.setUserId(commentDTO.getUserId());
-        finalNotifyDTO.setAction("comment");
+//        finalNotifyDTO.setUserId(commentDTO.getUserId());
+//        finalNotifyDTO.setAction("comment");
     }
 }
