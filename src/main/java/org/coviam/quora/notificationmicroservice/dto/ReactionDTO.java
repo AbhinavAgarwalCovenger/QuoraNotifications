@@ -9,10 +9,9 @@ import lombok.ToString;
 @ToString
 public class ReactionDTO {
 
-    String reactedUserName;
-    String reactedUserId;
-    String reactionType;
-    String category;
-    String onWhomReactedId;
-    String postType;
+    private String reactedUserName;
+    private String reactedUserId;
+    private String reactionType;
+    private String onWhomReactedId;
+    private String postType;
 }

@@ -9,14 +9,14 @@ import lombok.ToString;
 @ToString
 public class AnswerDTO {
 
-    String questionAskerId;
-    String questionAskerName;
-    String taggedProfileId;
-    String taggedProfileType;
-    String taggedProfileName;
-    String category;
-    String answerUserId;
-    String answerUserName;
-    Boolean isApproved;
+    private String questionAskerId;
+    private String questionAskerName;
+    private String taggedProfileId;
+    private String taggedProfileType;
+    private String taggedProfileName;
+    private String category;
+    private String answerUserId;
+    private String answerUserName;
+    private Boolean isApproved;
 
 }

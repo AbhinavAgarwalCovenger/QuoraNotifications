@@ -11,11 +11,11 @@ import java.util.List;
 @ToString
 public class FollowDTO {
 
-    String followerUserId;
-    String followedUserId;
-    String followerName;
-    String followedName;
-    String followedIdType;
-    List<String> moderatorId;
-    Boolean isApproved;
+    private String followerUserId;
+    private String followedUserId;
+    private String followerName;
+    private String followedName;
+    private String followedIdType;
+    private List<String> moderatorId;
+    private Boolean isApproved;
 }

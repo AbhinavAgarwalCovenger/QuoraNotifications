@@ -17,7 +17,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Autowired
     KafkaTemplate<String,String > kafkaTemplate;
 
-    final String TOPIC = "notify";
+    final String TOPIC = "notif1";
 
     @Override
     public void newQues(AskerResponseDTO askerResponseDTO, QuestionDTO questionDTO) throws JsonProcessingException {
@@ -41,7 +41,7 @@ public class NotificationServiceImpl implements NotificationService {
         if(askerResponseDTO.getModeratorList()!=null){
             userId.addAll(askerResponseDTO.getModeratorList());
             notificationDTO.setMessage(name+" has requested to post a question in your channel");
-            notificationDTO.setUserId(userId);
+            notificationDTO.setUidList(userId);
 
             list.add(notificationDTO);
 //            finalNotifyDTO.setNotificationDTOList(list);
@@ -51,11 +51,11 @@ public class NotificationServiceImpl implements NotificationService {
             if (askerResponseDTO.getTagFollowerList()!=null){
                 userId.add(taggedId);
                 notificationDTO.setMessage(name+" has asked you a question");
-                notificationDTO.setUserId(userId);
+                notificationDTO.setUidList(userId);
 
                 taggedFollowers.addAll(askerResponseDTO.getTagFollowerList());
                 taggedFollowerNotificationDTO.setMessage(name+"has asked a question to "+taggedName);
-                taggedFollowerNotificationDTO.setUserId(taggedFollowers);
+                taggedFollowerNotificationDTO.setUidList(taggedFollowers);
 
                 list.add(notificationDTO);
                 list.add(taggedFollowerNotificationDTO);
@@ -63,10 +63,10 @@ public class NotificationServiceImpl implements NotificationService {
 
             followersId.addAll(askerResponseDTO.getAskerFollowerList());
             followerNotificationDTO.setMessage(name+" has asked a question");
-            followerNotificationDTO.setUserId(followersId);
+            followerNotificationDTO.setUidList(followersId);
 
             categoryFollowers.addAll(askerResponseDTO.getCategoryFollowerList());
-            categoryNotificationDTO.setUserId(categoryFollowers);
+            categoryNotificationDTO.setUidList(categoryFollowers);
             categoryNotificationDTO.setMessage(name+" asked a question in "+category);
 
             list.add(followerNotificationDTO);
@@ -84,7 +84,7 @@ public class NotificationServiceImpl implements NotificationService {
 //        finalNotifyDTO.setNotificationDTOList(list);
 //        finalNotifyDTO.setChannel("quora");
 //        finalNotifyDTO.setCategory(category);
-//        finalNotifyDTO.setUserId(questionDTO.getAskerId());
+//        finalNotifyDTO.setUidList(questionDTO.getAskerId());
 //        finalNotifyDTO.setAction("askedQuestion");
     }
 
@@ -114,7 +114,7 @@ public class NotificationServiceImpl implements NotificationService {
         if(answerResponseDTO.getModeratorList()!=null){
             userId.addAll(answerResponseDTO.getModeratorList());
             notificationDTO.setMessage(answerUserName+" has requested to post a answer in your channel");
-            notificationDTO.setUserId(userId);
+            notificationDTO.setUidList(userId);
 
             list.add(notificationDTO);
 //            finalNotifyDTO.setNotificationDTOList(list);
@@ -126,27 +126,27 @@ public class NotificationServiceImpl implements NotificationService {
                 if (!(answerDTO.getAnswerUserId().equalsIgnoreCase(answerDTO.getTaggedProfileId()))) {
                     userId.add(taggedId);
                     notificationDTO.setMessage(answerUserName + " has answered a question you were asked");
-                    notificationDTO.setUserId(userId);
+                    notificationDTO.setUidList(userId);
 
                     list.add(notificationDTO);
                 }
 
                 taggedFollowers.addAll(answerResponseDTO.getTagFollowerList());
                 taggedFollowerNotificationDTO.setMessage(answerUserName+"has answered a question asked to "+taggedName);
-                taggedFollowerNotificationDTO.setUserId(taggedFollowers);
+                taggedFollowerNotificationDTO.setUidList(taggedFollowers);
                 list.add(taggedFollowerNotificationDTO);
             }
 
             askerFollowresId.addAll(answerResponseDTO.getAskerFollowerList());
             askerFollowerNotificationDTO.setMessage(answerUserName+" has answered a question asked by "+askerName);
-            askerFollowerNotificationDTO.setUserId(askerFollowresId);
+            askerFollowerNotificationDTO.setUidList(askerFollowresId);
 
             categoryFollowers.addAll(answerResponseDTO.getCategoryFollowerList());
-            categoryNotificationDTO.setUserId(categoryFollowers);
+            categoryNotificationDTO.setUidList(categoryFollowers);
             categoryNotificationDTO.setMessage(answerUserName+" has answered a question in "+category);
 
             answerFollowersId.addAll(answerResponseDTO.getAnswerFollowerList());
-            answerFollowerNotificationDTO.setUserId(answerFollowersId);
+            answerFollowerNotificationDTO.setUidList(answerFollowersId);
             answerFollowerNotificationDTO.setMessage(answerUserName+" has answered a question");
 
             list.add(answerFollowerNotificationDTO);
@@ -165,7 +165,7 @@ public class NotificationServiceImpl implements NotificationService {
 //        finalNotifyDTO.setNotificationDTOList(list);
 //        finalNotifyDTO.setChannel("quora");
 //        finalNotifyDTO.setCategory(category);
-//        finalNotifyDTO.setUserId(answerDTO.getAnswerUserId());
+//        finalNotifyDTO.setUidList(answerDTO.getAnswerUserId());
 //        finalNotifyDTO.setAction("answeredQuestion");
     }
 
@@ -190,19 +190,19 @@ public class NotificationServiceImpl implements NotificationService {
         ArrayList<String> taggedProfileFollowers = new ArrayList<>();
 
         askerId.add(questionDTO.getAskerId());
-        askerNotification.setUserId(askerId);
+        askerNotification.setUidList(askerId);
         askerNotification.setMessage("Your question has been approved by "+taggedName);
 
         askerFollowers.addAll(askerResponseDTO.getAskerFollowerList());
-        followerNotification.setUserId(askerFollowers);
+        followerNotification.setUidList(askerFollowers);
         followerNotification.setMessage(askerName+" has asked a question to "+taggedName);
 
         categoryFollowers.addAll(askerResponseDTO.getCategoryFollowerList());
-        categoryFollowerNotification.setUserId(categoryFollowers);
+        categoryFollowerNotification.setUidList(categoryFollowers);
         categoryFollowerNotification.setMessage(askerName+" has asked a question in "+category);
 
         taggedProfileFollowers.addAll(askerResponseDTO.getTagFollowerList());
-        taggedFollowerNotification.setUserId(taggedProfileFollowers);
+        taggedFollowerNotification.setUidList(taggedProfileFollowers);
         taggedFollowerNotification.setMessage(askerName+" has asked a question in "+taggedName+" channel");
 
         list.add(askerNotification);
@@ -219,7 +219,7 @@ public class NotificationServiceImpl implements NotificationService {
 //        finalNotifyDTO.setNotificationDTOList(list);
 //        finalNotifyDTO.setChannel("quora");
 //        finalNotifyDTO.setCategory(category);
-//        finalNotifyDTO.setUserId(questionDTO.getTaggedProfileId());
+//        finalNotifyDTO.setUidList(questionDTO.getTaggedProfileId());
 //        finalNotifyDTO.setAction("approvedQuestion");
 
     }
@@ -235,7 +235,7 @@ public class NotificationServiceImpl implements NotificationService {
         NotificationDTO notificationDTO = new NotificationDTO();
         userId.add(questionDTO.getAskerId());
 
-        notificationDTO.setUserId(userId);
+        notificationDTO.setUidList(userId);
         notificationDTO.setMessage(name+" has rejected to post your question in their channel");
 
         list.add(notificationDTO);
@@ -249,7 +249,7 @@ public class NotificationServiceImpl implements NotificationService {
 //        finalNotifyDTO.setNotificationDTOList(list);
 //        finalNotifyDTO.setChannel("quora");
 //        finalNotifyDTO.setCategory(questionDTO.getCategory());
-//        finalNotifyDTO.setUserId(questionDTO.getTaggedProfileId());
+//        finalNotifyDTO.setUidList(questionDTO.getTaggedProfileId());
 //        finalNotifyDTO.setAction("rejectedQuestion");
 
     }
@@ -278,27 +278,27 @@ public class NotificationServiceImpl implements NotificationService {
         ArrayList<String> taggedProfileFollowers = new ArrayList<>();
 
         answerId.add(answerDTO.getAnswerUserId());
-        answerNotification.setUserId(answerId);
+        answerNotification.setUidList(answerId);
         answerNotification.setMessage("Your answer has been approved to be posted by "+taggedProfile);
 
         askerId.add(answerDTO.getQuestionAskerId());
-        askerNotification.setUserId(askerId);
+        askerNotification.setUidList(askerId);
         askerNotification.setMessage("Your question has been answered by "+answerUserName);
 
         askerFollowers.addAll(answerResponseDTO.getAskerFollowerList());
-        askerFollowerNotification.setUserId(askerFollowers);
+        askerFollowerNotification.setUidList(askerFollowers);
         askerFollowerNotification.setMessage(answerUserName+" has answered a question asked by "+askerName);
 
         answerFollowers.addAll(answerResponseDTO.getAnswerFollowerList());
-        answerFollowerNotification.setUserId(answerFollowers);
+        answerFollowerNotification.setUidList(answerFollowers);
         answerFollowerNotification.setMessage(answerUserName+" has answered a question");
 
         categoryFollowers.addAll(answerResponseDTO.getCategoryFollowerList());
-        categoryFollowerNotification.setUserId(categoryFollowers);
+        categoryFollowerNotification.setUidList(categoryFollowers);
         categoryFollowerNotification.setMessage(answerUserName+" has answered a question asked in "+category);
 
         taggedProfileFollowers.addAll(answerResponseDTO.getTagFollowerList());
-        taggedProfileFollowersNotification.setUserId(taggedProfileFollowers);
+        taggedProfileFollowersNotification.setUidList(taggedProfileFollowers);
         taggedProfileFollowersNotification.setMessage(answerUserName+" answered a question asked in "+taggedProfile+" channel");
 
         list.add(answerNotification);
@@ -316,7 +316,7 @@ public class NotificationServiceImpl implements NotificationService {
 //        finalNotifyDTO.setNotificationDTOList(list);
 //        finalNotifyDTO.setChannel("quora");
 //        finalNotifyDTO.setCategory(category);
-//        finalNotifyDTO.setUserId(answerDTO.getTaggedProfileId());
+//        finalNotifyDTO.setUidList(answerDTO.getTaggedProfileId());
 //        finalNotifyDTO.setAction("approvedAnswer");
 
     }
@@ -332,7 +332,7 @@ public class NotificationServiceImpl implements NotificationService {
         NotificationDTO notificationDTO = new NotificationDTO();
         userId.add(answerDTO.getAnswerUserId());
 
-        notificationDTO.setUserId(userId);
+        notificationDTO.setUidList(userId);
         notificationDTO.setMessage(name+" has rejected your answer");
 
         list.add(notificationDTO);
@@ -346,7 +346,7 @@ public class NotificationServiceImpl implements NotificationService {
 //        finalNotifyDTO.setNotificationDTOList(list);
 //        finalNotifyDTO.setChannel("quora");
 //        finalNotifyDTO.setCategory(answerDTO.getCategory());
-//        finalNotifyDTO.setUserId(answerDTO.getTaggedProfileId());
+//        finalNotifyDTO.setUidList(answerDTO.getTaggedProfileId());
 //        finalNotifyDTO.setAction("rejectedAnswer");
     }
 
@@ -364,7 +364,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         userId.add(reactionDTO.getOnWhomReactedId());
 
-        notificationDTO.setUserId(userId);
+        notificationDTO.setUidList(userId);
 
         if (reactions.equalsIgnoreCase("like"))
             notificationDTO.setMessage(name+"liked your "+post);
@@ -384,7 +384,7 @@ public class NotificationServiceImpl implements NotificationService {
 //        finalNotifyDTO.setNotificationDTOList(list);
 //        finalNotifyDTO.setChannel("quora");
 //        finalNotifyDTO.setCategory(reactionDTO.getCategory());
-//        finalNotifyDTO.setUserId(reactionDTO.getReactedUserId());
+//        finalNotifyDTO.setUidList(reactionDTO.getReactedUserId());
 //        finalNotifyDTO.setAction("newReaction");
     }
 
@@ -403,7 +403,9 @@ public class NotificationServiceImpl implements NotificationService {
         userId.add(levelUpDTO.getUserId());
 
         selfNotificationDTO.setMessage("You levelled up to "+ level +" level");
-        selfNotificationDTO.setUserId(userId);
+        selfNotificationDTO.setUidList(userId);
+        selfNotificationDTO.setPlatform("quora");
+        selfNotificationDTO.setTitle("");
 
         //userFollowers
         NotificationDTO followerNotificationDTO = new NotificationDTO();
@@ -412,21 +414,23 @@ public class NotificationServiceImpl implements NotificationService {
         userFollowerId.addAll(levelUpDTO.getFollowerUserId());
 
         followerNotificationDTO.setMessage(name+" levelled up to "+ level+" level");
-        followerNotificationDTO.setUserId(userFollowerId);
+        followerNotificationDTO.setUidList(userFollowerId);
+        followerNotificationDTO.setTitle("");
+        followerNotificationDTO.setPlatform("quora");
 
         list.add(selfNotificationDTO);
         list.add(followerNotificationDTO);
 
         for(NotificationDTO notifyList: list){
             ObjectMapper objectMapper = new ObjectMapper();
-
+            System.out.println(notifyList.getMessage());
             kafkaTemplate.send(TOPIC,objectMapper.writeValueAsString(notifyList));
         }
 
 //        finalNotifyDTO.setNotificationDTOList(list);
 //        finalNotifyDTO.setChannel("quora");
 //        finalNotifyDTO.setCategory();
-//        finalNotifyDTO.setUserId(levelUpDTO.getUserId());
+//        finalNotifyDTO.setUidList(levelUpDTO.getUidList());
 //        finalNotifyDTO.setAction("levelledUp");
 
     }
@@ -445,14 +449,14 @@ public class NotificationServiceImpl implements NotificationService {
 
         if (type.equalsIgnoreCase("public")) {
             userId.add(followDTO.getFollowedUserId());
-            notificationDTO.setUserId(userId);
+            notificationDTO.setUidList(userId);
             notificationDTO.setMessage(name+" started following you.");
 
         }
 
         else {
             userId.addAll(followDTO.getModeratorId());
-            notificationDTO.setUserId(userId);
+            notificationDTO.setUidList(userId);
             notificationDTO.setMessage(name+" has requested to follow you");
         }
 
@@ -467,7 +471,7 @@ public class NotificationServiceImpl implements NotificationService {
 //        finalNotifyDTO.setNotificationDTOList(list);
 //        finalNotifyDTO.setChannel("quora");
 //        finalNotifyDTO.setCategory();
-//        finalNotifyDTO.setUserId(followDTO.getFollowerUserId());
+//        finalNotifyDTO.setUidList(followDTO.getFollowerUserId());
 //        finalNotifyDTO.setAction("followRequested");
 
     }
@@ -483,7 +487,7 @@ public class NotificationServiceImpl implements NotificationService {
         ArrayList<String> userId = new ArrayList<>();
         userId.add(followDTO.getFollowerUserId());
 
-        notificationDTO.setUserId(userId);
+        notificationDTO.setUidList(userId);
         notificationDTO.setMessage(name+" accepted your follow request");
 
         list.add(notificationDTO);
@@ -497,7 +501,7 @@ public class NotificationServiceImpl implements NotificationService {
 //        finalNotifyDTO.setNotificationDTOList(list);
 //        finalNotifyDTO.setChannel("quora");
 //        finalNotifyDTO.setCategory();
-//        finalNotifyDTO.setUserId(followDTO.getFollowedUserId());
+//        finalNotifyDTO.setUidList(followDTO.getFollowedUserId());
 //        finalNotifyDTO.setAction("followRequestAccepted");
 
     }
@@ -514,7 +518,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         userId.add(answerDTO.getAnswerUserId());
 
-        notificationDTO.setUserId(userId);
+        notificationDTO.setUidList(userId);
         notificationDTO.setMessage(name+" chose your answer as the correct answer");
 
         list.add(notificationDTO);
@@ -528,7 +532,7 @@ public class NotificationServiceImpl implements NotificationService {
 //        finalNotifyDTO.setNotificationDTOList(list);
 //        finalNotifyDTO.setChannel("quora");
 //        finalNotifyDTO.setCategory(answerDTO.getCategory());
-//        finalNotifyDTO.setUserId(answerDTO.getQuestionAskerId());
+//        finalNotifyDTO.setUidList(answerDTO.getQuestionAskerId());
 //        finalNotifyDTO.setAction("threadClosed");
 
     }
@@ -543,7 +547,7 @@ public class NotificationServiceImpl implements NotificationService {
         ArrayList<String> userId = new ArrayList<>();
 
         userId.add(id);
-        notificationDTO.setUserId(userId);
+        notificationDTO.setUidList(userId);
         notificationDTO.setMessage("Someone commented on your "+type);
 
         list.add(notificationDTO);
@@ -557,7 +561,7 @@ public class NotificationServiceImpl implements NotificationService {
 //        finalNotifyDTO.setNotificationDTOList(list);
 //        finalNotifyDTO.setChannel("quora");
 //        finalNotifyDTO.setCategory();
-//        finalNotifyDTO.setUserId(commentDTO.getUserId());
+//        finalNotifyDTO.setUidList(commentDTO.getUidList());
 //        finalNotifyDTO.setAction("comment");
     }
 }

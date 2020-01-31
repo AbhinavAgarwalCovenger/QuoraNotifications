@@ -10,9 +10,10 @@ import java.util.List;
 @Setter
 @ToString
 public class AnswerResponseDTO {
-    List<String> askerFollowerList;
-    List<String> categoryFollowerList;
-    List<String> tagFollowerList;
-    List<String> moderatorList;
-    List<String> answerFollowerList;
+
+    private List<String> askerFollowerList;
+    private List<String> categoryFollowerList;
+    private List<String> tagFollowerList;
+    private List<String> moderatorList;
+    private List<String> answerFollowerList;
 }

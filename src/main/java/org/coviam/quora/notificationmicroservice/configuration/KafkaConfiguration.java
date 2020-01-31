@@ -1,8 +1,8 @@
 package org.coviam.quora.notificationmicroservice.configuration;
-import com.fasterxml.jackson.databind.ser.std.StringSerializer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -22,6 +22,16 @@ public class KafkaConfiguration {
             config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,StringDeserializer.class);
             return  new DefaultKafkaConsumerFactory<>(config,new StringDeserializer(),new StringDeserializer());
         }
+
+//        @Bean
+//        public ConsumerFactory<String,String> consumerFactory(){
+//            Map<String,Object> config = new HashMap<>();
+//            config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,"10.177.69.3:9092");
+//            config.put(ConsumerConfig.GROUP_ID_CONFIG,"group-id");
+//            config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,StringDeserializer.class);
+//            config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,StringDeserializer.class);
+//            return  new DefaultKafkaConsumerFactory<>(config,new StringDeserializer(),new StringDeserializer());
+//        }
         @Bean
         public ConcurrentKafkaListenerContainerFactory<String,String> kafkaListenerContainerFactory(){
             ConcurrentKafkaListenerContainerFactory<String,String> factory = new ConcurrentKafkaListenerContainerFactory<>();
@@ -29,11 +39,12 @@ public class KafkaConfiguration {
             return factory;
         }
 
+
     @Bean
     public ProducerFactory producerFactory()
     {
         Map<String, Object> config= new HashMap<>();
-        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "10.177.69.3:9092");
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,StringSerializer.class);
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,StringSerializer.class);
         return new DefaultKafkaProducerFactory(config);

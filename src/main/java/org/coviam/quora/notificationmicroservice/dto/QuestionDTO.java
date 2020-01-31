@@ -9,11 +9,11 @@ import lombok.ToString;
 @ToString
 public class QuestionDTO {
 
-    String askerId;
-    String askerUserName;
-    String taggedProfileId;
-    String taggedProfileType;
-    String taggedProfileName;
-    String category;
-    Boolean isApproved;
+    private String askerId;
+    private String askerUserName;
+    private String taggedProfileId;
+    private String taggedProfileType;
+    private String taggedProfileName;
+    private String category;
+    private Boolean isApproved;
 }
