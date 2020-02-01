@@ -23,15 +23,6 @@ public class KafkaConfiguration {
             return  new DefaultKafkaConsumerFactory<>(config,new StringDeserializer(),new StringDeserializer());
         }
 
-//        @Bean
-//        public ConsumerFactory<String,String> consumerFactory(){
-//            Map<String,Object> config = new HashMap<>();
-//            config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,"10.177.69.3:9092");
-//            config.put(ConsumerConfig.GROUP_ID_CONFIG,"group-id");
-//            config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,StringDeserializer.class);
-//            config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,StringDeserializer.class);
-//            return  new DefaultKafkaConsumerFactory<>(config,new StringDeserializer(),new StringDeserializer());
-//        }
         @Bean
         public ConcurrentKafkaListenerContainerFactory<String,String> kafkaListenerContainerFactory(){
             ConcurrentKafkaListenerContainerFactory<String,String> factory = new ConcurrentKafkaListenerContainerFactory<>();
@@ -44,11 +35,12 @@ public class KafkaConfiguration {
     public ProducerFactory producerFactory()
     {
         Map<String, Object> config= new HashMap<>();
-        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "10.177.69.3:9092");
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.16.20.150:9092");
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,StringSerializer.class);
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,StringSerializer.class);
         return new DefaultKafkaProducerFactory(config);
     }
+
     @Bean
     public KafkaTemplate<String,String> kafkaTemplate()
     {

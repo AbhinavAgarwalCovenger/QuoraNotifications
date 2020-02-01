@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
+@CrossOrigin("*")
 //@RequestMapping("/notify")
 public class NotificationController {
 
@@ -31,7 +32,7 @@ public class NotificationController {
         QuestionDTO question = new QuestionDTO();
         question = objectMapper.readValue(questionDTO,QuestionDTO.class);
 
-        final String uri="http://10.177.69.27:8080/profile/followerId";
+        final String uri="http://172.16.20.119:8080/profile/followerId";
         RestTemplate restTemplate=new RestTemplate();
         AskerResponseDTO askerResponseDTO=restTemplate.getForObject(uri,AskerResponseDTO.class,question);
         notificationService.newQues(askerResponseDTO, question);
@@ -46,7 +47,7 @@ public class NotificationController {
         question = objectMapper.readValue(questionDTO,QuestionDTO.class);
 
         if(question.getIsApproved()) {
-            final String uri = "http://10.177.69.27:8080/profile/approveFollower";
+            final String uri = "http://172.16.20.119:8080/profile/approveFollower";
             RestTemplate restTemplate = new RestTemplate();
             AskerResponseDTO askerResponseDTO = restTemplate.getForObject(uri, AskerResponseDTO.class, question);
             notificationService.questionApproved(askerResponseDTO,question);
@@ -63,7 +64,7 @@ public class NotificationController {
         AnswerDTO answer = new AnswerDTO();
         answer= objectMapper.readValue(answerDTO,AnswerDTO.class);
 
-        final String uri = "http://10.177.69.27:8080/profile/answerFollowerId";
+        final String uri = "http://172.16.20.119:8080/profile/answerFollowerId";
         RestTemplate restTemplate = new RestTemplate();
         AnswerResponseDTO answerResponseDTO = restTemplate.getForObject(uri,AnswerResponseDTO.class,answer);
         notificationService.newAns(answerResponseDTO, answer);
@@ -77,7 +78,7 @@ public class NotificationController {
         answer= objectMapper.readValue(answerDTO,AnswerDTO.class);
         
         if(answer.getIsApproved()) {
-            final String uri = "http://10.177.69.27:8080/profile/answerApproveFollower";
+            final String uri = "http://172.16.20.119:8080/profile/answerApproveFollower";
             RestTemplate restTemplate = new RestTemplate();
             AnswerResponseDTO answerResponseDTO = restTemplate.getForObject(uri, AnswerResponseDTO.class, answer);
             notificationService.answerApproved(answerResponseDTO, answer);
@@ -100,23 +101,26 @@ public class NotificationController {
         String userId;
         String type;
         if(parentId.startsWith("C_")){
-            final String uri="http://10.177.68.51:8080/comment/getUserIdByCommentId";
+            final String uri="http://172.16.20.165:8080/comment/getUserIdByCommentId";
             RestTemplate restTemplate=new RestTemplate();
             ResponseDTO<String> responseDTO=restTemplate.getForObject(uri,ResponseDTO.class,parentId);
             userId=responseDTO.getData();
             type="comment";
         }
-        else if (parentId.startsWith("Q_")){
-            final String uri="http://10.177.68.235/questions/getProfileIdByQuestionId";
-            RestTemplate restTemplate=new RestTemplate();
-            userId = restTemplate.getForObject(uri,String.class,parentId);
-            type="question";
-        }
-        else {
-            final String uri="http://10.177.68.235/answers/getProfileIdByAnswerId";
-            RestTemplate restTemplate=new RestTemplate();
-            userId = restTemplate.getForObject(uri,String.class,parentId);
-            type="answer";
+        else{
+
+            userId = comment.getQuestionOrAnswerUserId();
+            type = "post";
+//            final String uri="http://10.177.68.235/questions/getProfileIdByQuestionId";
+//            RestTemplate restTemplate=new RestTemplate();
+//            userId = restTemplate.getForObject(uri,String.class,parentId);
+//            type="question";
+//        }
+//        else {
+//            final String uri="http://10.177.68.235/answers/getProfileIdByAnswerId";
+//            RestTemplate restTemplate=new RestTemplate();
+//            userId = restTemplate.getForObject(uri,String.class,parentId);
+//            type="answer";
         }
 
         notificationService.newComment(comment,userId,type);
