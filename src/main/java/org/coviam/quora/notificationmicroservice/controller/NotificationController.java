@@ -32,9 +32,11 @@ public class NotificationController {
         QuestionDTO question = new QuestionDTO();
         question = objectMapper.readValue(questionDTO,QuestionDTO.class);
 
+        System.out.println(question.getAskerUserName());
+
         final String uri="http://172.16.20.119:8080/profile/followerId";
         RestTemplate restTemplate=new RestTemplate();
-        AskerResponseDTO askerResponseDTO=restTemplate.getForObject(uri,AskerResponseDTO.class,question);
+        AskerResponseDTO askerResponseDTO=restTemplate.postForObject(uri,question,AskerResponseDTO.class);
         notificationService.newQues(askerResponseDTO, question);
 
     }
@@ -49,7 +51,7 @@ public class NotificationController {
         if(question.getIsApproved()) {
             final String uri = "http://172.16.20.119:8080/profile/approveFollower";
             RestTemplate restTemplate = new RestTemplate();
-            AskerResponseDTO askerResponseDTO = restTemplate.getForObject(uri, AskerResponseDTO.class, question);
+            AskerResponseDTO askerResponseDTO = restTemplate.postForObject(uri, question,AskerResponseDTO.class);
             notificationService.questionApproved(askerResponseDTO,question);
         }
         else {
@@ -66,7 +68,7 @@ public class NotificationController {
 
         final String uri = "http://172.16.20.119:8080/profile/answerFollowerId";
         RestTemplate restTemplate = new RestTemplate();
-        AnswerResponseDTO answerResponseDTO = restTemplate.getForObject(uri,AnswerResponseDTO.class,answer);
+        AnswerResponseDTO answerResponseDTO = restTemplate.postForObject(uri, answer, AnswerResponseDTO.class);
         notificationService.newAns(answerResponseDTO, answer);
     }
 
@@ -80,7 +82,7 @@ public class NotificationController {
         if(answer.getIsApproved()) {
             final String uri = "http://172.16.20.119:8080/profile/answerApproveFollower";
             RestTemplate restTemplate = new RestTemplate();
-            AnswerResponseDTO answerResponseDTO = restTemplate.getForObject(uri, AnswerResponseDTO.class, answer);
+            AnswerResponseDTO answerResponseDTO = restTemplate.postForObject(uri, answer,AnswerResponseDTO.class);
             notificationService.answerApproved(answerResponseDTO, answer);
         }
         else {
